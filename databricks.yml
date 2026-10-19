@@ -1,17 +1,12 @@
 bundle:
   name: crm_marketing_pipeline
 
-targets:
-  dev:
-    default: true
-
 resources:
   pipelines:
     crm_dlt_pipeline:
-      name: "Marketing CRM DLT Pipeline"
-      target: "marketing_schema" # Schema/Base de datos donde se crearán las tablas
-      catalog: "marketing" # El catálogo por defecto de Unity Catalog
-      development: true
+      name: "Marketing CRM DLT Pipeline [${bundle.target}]"
+      target: "marketing_schema_${bundle.target}"
+      catalog: "marketing"
       continuous: false
       serverless: true
       libraries:
@@ -21,3 +16,24 @@ resources:
             path: ./src/dlt_pipeline/02_silver.py
         - file:
             path: ./src/dlt_pipeline/03_gold.py
+
+targets:
+  dev:
+    default: true
+    resources:
+      pipelines:
+        crm_dlt_pipeline:
+          development: true
+
+  test:
+    resources:
+      pipelines:
+        crm_dlt_pipeline:
+          development: true
+
+  prod:
+    resources:
+      pipelines:
+        crm_dlt_pipeline:
+          development: false
+          
