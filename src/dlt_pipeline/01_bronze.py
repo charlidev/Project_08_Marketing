@@ -1,8 +1,9 @@
 import dlt
-from pyspark.sql.functions import current_timestamp, input_file_name
+import pyspark.sql.functions as F
+from pyspark.sql.functions import current_timestamp
 from pyspark.sql import SparkSession
 
-ruta_adls = "abfss://marketing@datalakedino14.dfs.core.windows.net//landing/"
+ruta_adls = "abfss://marketing@datalakedino14_1792423117138.dfs.core.windows.net/landing/"
 
 @dlt.table(
     name="bronze_crm_marketing",
@@ -10,7 +11,6 @@ ruta_adls = "abfss://marketing@datalakedino14.dfs.core.windows.net//landing/"
     table_properties={"quality": "bronze"}
 )
 def bronze_crm_marketing():
-    # Obtenemos la sesión activa de Spark
     spark = SparkSession.builder.getOrCreate()
     
     return (
@@ -20,5 +20,6 @@ def bronze_crm_marketing():
         .option("header", "true")
         .load(ruta_adls)
         .withColumn("ingestion_timestamp", current_timestamp())
-        .withColumn("source_file", input_file_name())
+        # Corrección: Usamos _metadata.file_path en lugar de input_file_name()
+        .withColumn("source_file", F.col("_metadata.file_path"))
     )
