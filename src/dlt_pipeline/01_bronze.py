@@ -3,7 +3,7 @@ import pyspark.sql.functions as F
 from pyspark.sql.functions import current_timestamp
 from pyspark.sql import SparkSession
 
-ruta_adls = "abfss://marketing@datalakedino14_1792423117138.dfs.core.windows.net/landing/"
+ruta_adls = "abfss://marketing@datalakedino14.dfs.core.windows.net/landing/"
 
 @dlt.table(
     name="bronze_crm_marketing",
