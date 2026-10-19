@@ -10,15 +10,15 @@ resources:
     crm_dlt_pipeline:
       name: "Marketing CRM DLT Pipeline"
       target: "dev"
-      development: true
+      mode: development
       continuous: false
       clusters:
         - label: "default"
           num_workers: 1
       libraries:
-        - notebook:
+        - file:
             path: ./src/dlt_pipeline/01_bronze.py
-        - notebook:
+        - file:
             path: ./src/dlt_pipeline/02_silver.py
-        - notebook:
+        - file:
             path: ./src/dlt_pipeline/03_gold.py
