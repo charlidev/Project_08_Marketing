@@ -10,11 +10,9 @@ resources:
     crm_dlt_pipeline:
       name: "Marketing CRM DLT Pipeline"
       target: "dev"
-      mode: development
+      development: true
       continuous: false
-      clusters:
-        - label: "default"
-          num_workers: 1
+      serverless: true
       libraries:
         - file:
             path: ./src/dlt_pipeline/01_bronze.py
