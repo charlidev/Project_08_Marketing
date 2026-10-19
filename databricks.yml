@@ -9,7 +9,8 @@ resources:
   pipelines:
     crm_dlt_pipeline:
       name: "Marketing CRM DLT Pipeline"
-      target: "dev"
+      target: "marketing_schema" # Schema/Base de datos donde se crearán las tablas
+      catalog: "marketing" # El catálogo por defecto de Unity Catalog
       development: true
       continuous: false
       serverless: true
