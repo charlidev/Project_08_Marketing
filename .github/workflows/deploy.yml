@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
       - test
       - dev
 
@@ -30,8 +31,8 @@ jobs:
           pytest tests/ --cov=src/dlt_pipeline --cov-report=term-missing
 
   deploy:
-    name: "Deploy Bundle to Dev Target"
-    needs: unit-tests #Este job espera a que el de arriba sea exitoso
+    name: "Deploy Bundle"
+    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,9 +41,21 @@ jobs:
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
 
+      - name: Determine Target Environment
+        id: set-target
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" || "${{ github.ref_name }}" == "master" ]]; then
+            echo "TARGET=prod" >> $GITHUB_ENV
+          elif [[ "${{ github.ref_name }}" == "test" ]]; then
+            echo "TARGET=test" >> $GITHUB_ENV
+          else
+            echo "TARGET=dev" >> $GITHUB_ENV
+          fi
+
       - name: Deploy Databricks Bundle
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          databricks bundle deploy --target dev
+          echo "Deploying to target: ${{ env.TARGET }}"
+          databricks bundle deploy --target ${{ env.TARGET }}
