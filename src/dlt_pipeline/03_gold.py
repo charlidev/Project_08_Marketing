@@ -1,13 +1,10 @@
 import dlt
 import pyspark.sql.functions as F
 
-# Creamos una vista temporal en DLT para generar el ID único y evitar recalcularlo
 @dlt.view(name="silver_with_id")
 def silver_with_id():
     return (
         dlt.read("silver_crm_marketing")
-        # Generamos una llave subrogada (Customer_ID) usando el hash de toda la fila
-        # para garantizar que el mismo cliente tenga siempre el mismo ID
         .withColumn("Customer_ID", F.md5(F.to_json(F.struct("*"))))
     )
 
@@ -20,10 +17,22 @@ def dim_clientes():
         dlt.read("silver_with_id")
         .withColumn("Total_Dependents", F.col("Kidhome") + F.col("Teenhome"))
         .select(
-            "Customer_ID", "Age", "Income", "Total_Dependents", 
-            "marital_Divorced", "marital_Married", "marital_Single", "marital_Together", "marital_Widow",
-            "education_2n Cycle", "education_Basic", "education_Graduation", "education_Master", "education_PhD",
-            "Customer_Days"
+            F.col("Customer_ID"), 
+            F.col("Age"), 
+            F.col("Income"), 
+            F.col("Total_Dependents"), 
+            F.col("marital_Divorced"), 
+            F.col("marital_Married"), 
+            F.col("marital_Single"), 
+            F.col("marital_Together"), 
+            F.col("marital_Widow"),
+            # AQUÍ REPARAMOS EL ERROR DEL ESPACIO:
+            F.col("education_2n Cycle").alias("education_2n_Cycle"), 
+            F.col("education_Basic"), 
+            F.col("education_Graduation"), 
+            F.col("education_Master"), 
+            F.col("education_PhD"),
+            F.col("Customer_Days")
         )
     )
 
