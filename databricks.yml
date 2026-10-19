@@ -1,11 +1,9 @@
-# databricks.yml
 bundle:
   name: crm_marketing_pipeline
 
 targets:
   dev:
-    workspace:
-      host: ${workspace.host}
+    default: true
 
 resources:
   pipelines:
