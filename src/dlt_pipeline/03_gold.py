@@ -27,7 +27,7 @@ def dim_clientes():
             F.col("marital_Together"), 
             F.col("marital_Widow"),
             # AQUÍ REPARAMOS EL ERROR DEL ESPACIO:
-            F.col("education_2n Cycle").alias("education_2n_Cycle"), 
+            F.col("education_2n_Cycle").alias("education_2n_Cycle"), 
             F.col("education_Basic"), 
             F.col("education_Graduation"), 
             F.col("education_Master"), 
