@@ -1,0 +1,150 @@
+table dim_clientes
+	lineageTag: 52393a53-e010-43e6-8cc6-e0eb6259c1b1
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 6d5cfb88-5c0d-45cc-b8d1-3b9c81c65da8
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: 43d94877-a4cf-43fd-805f-73b022b6d072
+		summarizeBy: sum
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Income
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a4b22b8-d947-4c17-957b-4fa0b041edd2
+		summarizeBy: sum
+		sourceColumn: Income
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Dependents
+		dataType: int64
+		formatString: 0
+		lineageTag: aa51c59e-221e-4d85-9823-3644a39e588f
+		summarizeBy: sum
+		sourceColumn: Total_Dependents
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Divorced
+		dataType: int64
+		formatString: 0
+		lineageTag: 92ae7353-f339-428e-b542-70160dcab95a
+		summarizeBy: sum
+		sourceColumn: marital_Divorced
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Married
+		dataType: int64
+		formatString: 0
+		lineageTag: c16801c6-16cd-4adb-bf99-a41ab3dd03c4
+		summarizeBy: sum
+		sourceColumn: marital_Married
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Single
+		dataType: int64
+		formatString: 0
+		lineageTag: 6de4536c-91fb-4e3b-91db-a7001ff1d812
+		summarizeBy: sum
+		sourceColumn: marital_Single
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Together
+		dataType: int64
+		formatString: 0
+		lineageTag: 6d081fd1-8cf4-4782-bbbc-d0457214e699
+		summarizeBy: sum
+		sourceColumn: marital_Together
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Widow
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b442b77-4c6b-4d1b-a84b-a861cb3f02c9
+		summarizeBy: sum
+		sourceColumn: marital_Widow
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_2n_Cycle
+		dataType: int64
+		formatString: 0
+		lineageTag: 733c33a1-6572-4b53-8e71-f8a114f5928c
+		summarizeBy: sum
+		sourceColumn: education_2n_Cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Basic
+		dataType: int64
+		formatString: 0
+		lineageTag: 0980be69-ca3d-49cd-a35a-8b65b9b7ba50
+		summarizeBy: sum
+		sourceColumn: education_Basic
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Graduation
+		dataType: int64
+		formatString: 0
+		lineageTag: 718e07ec-6db2-43d0-affe-aefddd8d3506
+		summarizeBy: sum
+		sourceColumn: education_Graduation
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Master
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e3301e1-dbe9-42ab-8bd8-a4931cf19f48
+		summarizeBy: sum
+		sourceColumn: education_Master
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_PhD
+		dataType: int64
+		formatString: 0
+		lineageTag: b84b17e0-ad15-4aa7-94ce-6a75c69f9bc6
+		summarizeBy: sum
+		sourceColumn: education_PhD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: 3193cd95-d666-4773-99dc-70d74d06b5ee
+		summarizeBy: sum
+		sourceColumn: Customer_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_clientes = m
+		mode: import
+		source =
+				let
+				  Origen = Databricks.Catalogs("adb-7405609169068282.2.azuredatabricks.net", "/sql/1.0/warehouses/2d8ac8ce74858ab7", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navegación 1" = Origen{[Name = "marketing", Kind = "Database"]}[Data],
+				  #"Navegación 2" = #"Navegación 1"{[Name = "marketing_schema_prod", Kind = "Schema"]}[Data],
+				  #"Navegación 3" = #"Navegación 2"{[Name = "dim_clientes", Kind = "View"]}[Data]
+				in
+				  #"Navegación 3"
+
+	annotation PBI_ResultType = Table
+

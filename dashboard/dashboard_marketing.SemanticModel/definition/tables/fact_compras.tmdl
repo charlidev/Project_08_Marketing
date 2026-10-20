@@ -1,0 +1,150 @@
+table fact_compras
+	lineageTag: eca84737-729e-4c45-984c-c729948daf99
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 0e608d05-83cd-4240-af79-83ed85a13633
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recency
+		dataType: int64
+		formatString: 0
+		lineageTag: 12303653-8be0-4078-9946-103e01d1674a
+		summarizeBy: sum
+		sourceColumn: Recency
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntTotal
+		dataType: int64
+		formatString: 0
+		lineageTag: 0435001b-eaab-4da7-a74b-cfddf0fc727a
+		summarizeBy: sum
+		sourceColumn: MntTotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntRegularProds
+		dataType: int64
+		formatString: 0
+		lineageTag: 0130507e-4127-42ae-85b2-9330cb6eb6a4
+		summarizeBy: sum
+		sourceColumn: MntRegularProds
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntWines
+		dataType: int64
+		formatString: 0
+		lineageTag: b3b907f1-1b6e-4d77-85cc-d40f3dcf88dc
+		summarizeBy: sum
+		sourceColumn: MntWines
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntFruits
+		dataType: int64
+		formatString: 0
+		lineageTag: 27e037f6-b26f-4bdb-86e0-f10c17723258
+		summarizeBy: sum
+		sourceColumn: MntFruits
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntMeatProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: b7e422de-dc9c-4bd6-bf52-6c43d019ac04
+		summarizeBy: sum
+		sourceColumn: MntMeatProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntFishProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: dd397774-14a3-4839-9ace-68a052a5af3d
+		summarizeBy: sum
+		sourceColumn: MntFishProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntSweetProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: 21237549-6c30-48ac-8a24-45c22a658a72
+		summarizeBy: sum
+		sourceColumn: MntSweetProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntGoldProds
+		dataType: int64
+		formatString: 0
+		lineageTag: 8406ec54-371f-45a2-93ed-0821716a4033
+		summarizeBy: sum
+		sourceColumn: MntGoldProds
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumDealsPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 98363dd9-9b10-452c-a97e-40c494eabc1a
+		summarizeBy: sum
+		sourceColumn: NumDealsPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumWebPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 1bf94c0b-0d7f-47b4-bf4c-e3f8daa3639f
+		summarizeBy: sum
+		sourceColumn: NumWebPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumCatalogPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: eee1129a-79e0-4a2f-8d1e-a8fe53f46569
+		summarizeBy: sum
+		sourceColumn: NumCatalogPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumStorePurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c96f8f2-7783-48f0-a84d-def2fa7e2423
+		summarizeBy: sum
+		sourceColumn: NumStorePurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumWebVisitsMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: b14859f5-9191-4db8-b6c5-f6f5dd984440
+		summarizeBy: sum
+		sourceColumn: NumWebVisitsMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_compras = m
+		mode: import
+		source =
+				let
+				  Origen = Databricks.Catalogs("adb-7405609169068282.2.azuredatabricks.net", "/sql/1.0/warehouses/2d8ac8ce74858ab7", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navegación 1" = Origen{[Name = "marketing", Kind = "Database"]}[Data],
+				  #"Navegación 2" = #"Navegación 1"{[Name = "marketing_schema_prod", Kind = "Schema"]}[Data],
+				  #"Navegación 3" = #"Navegación 2"{[Name = "fact_compras", Kind = "View"]}[Data]
+				in
+				  #"Navegación 3"
+
+	annotation PBI_ResultType = Table
+
