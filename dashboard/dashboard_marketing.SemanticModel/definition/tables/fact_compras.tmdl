@@ -1,0 +1,354 @@
+table fact_compras
+	lineageTag: eca84737-729e-4c45-984c-c729948daf99
+
+	/// Suma del gasto total de todos los clientes en el periodo analizado.
+	measure 'Gasto Total' = SUM( fact_compras[MntTotal] )
+		formatString: $ #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: c3e4f6b8-a00a-4cb0-babd-3b60247b5c3f
+
+	/// Gasto total dividido entre el número de clientes. Ticket promedio por cliente.
+	measure 'Gasto Promedio por Cliente' = DIVIDE( [Gasto Total], [Total Clientes] )
+		formatString: $ #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: a5ad8034-4c85-4ec8-9f39-9d7f2a68159c
+
+	/// Días promedio desde la última compra para clientes que respondieron a la campaña. Menor = más activos.
+	measure 'Recency Promedio Respondedores' = CALCULATE( AVERAGE( fact_compras[Recency] ), fact_campanias[Response] = 1 )
+		formatString: #,0
+		displayFolder: Análisis de Campañas
+		lineageTag: 938499bf-e831-4c61-a773-24b154d0339d
+
+	/// Gasto total en vinos.
+	measure 'Gasto Vinos' = SUM( fact_compras[MntWines] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: ded6c04d-7071-48fd-8bfd-7790d8233e90
+
+	/// Gasto total en frutas.
+	measure 'Gasto Frutas' = SUM( fact_compras[MntFruits] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 5f0f609c-b7a4-40e0-b263-bdcec67418ff
+
+	/// Gasto total en cárnicos.
+	measure 'Gasto Cárnicos' = SUM( fact_compras[MntMeatProducts] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 5375726b-37f2-4ef9-9ed0-546aec8d19b8
+
+	/// Gasto total en pescados y mariscos.
+	measure 'Gasto Pescados' = SUM( fact_compras[MntFishProducts] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: bb54c0a8-35e9-4288-9033-965609bf1e78
+
+	/// Gasto total en dulces y confitería.
+	measure 'Gasto Dulces' = SUM( fact_compras[MntSweetProducts] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 8751855d-4cd2-43b9-829c-0a18328d62d0
+
+	/// Gasto total en productos premium Gold.
+	measure 'Gasto Gold (Premium)' = SUM( fact_compras[MntGoldProds] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: bcabdae5-ec50-4126-893e-07e800e34675
+
+	/// Gasto total en productos regulares / cotidianos.
+	measure 'Gasto Productos Regulares' = SUM( fact_compras[MntRegularProds] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: b8a2e851-6355-4e7d-aeaf-9ab51b5f839c
+
+	/// Total de compras realizadas a través del sitio web.
+	measure 'Compras Web' = SUM( fact_compras[NumWebPurchases] )
+		formatString: #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 5de0fee9-4180-417d-827f-2c8e9d52f14a
+
+	/// Total de compras realizadas vía catálogo.
+	measure 'Compras Catálogo' = SUM( fact_compras[NumCatalogPurchases] )
+		formatString: #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 6a9367cc-afc9-469a-80f7-dd164e22d874
+
+	/// Total de compras realizadas en tienda física.
+	measure 'Compras Tienda' = SUM( fact_compras[NumStorePurchases] )
+		formatString: #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: a33774c5-b112-4bda-a483-63e28ffaf701
+
+	/// Tasa de conversión digital: compras web divididas entre visitas al sitio web en el mes.
+	measure 'Tasa Conversión Web' = DIVIDE( SUM( fact_compras[NumWebPurchases] ), SUM( fact_compras[NumWebVisitsMonth] ) )
+		formatString: 0.0%
+		displayFolder: Mix de Producto y Canal
+		lineageTag: fa71387d-9f79-46cc-a5d8-f931e5d3e354
+
+	/// Promedio de compras realizadas con descuento o promoción por cliente.
+	measure 'Compras con Descuento Promedio' = AVERAGE( fact_compras[NumDealsPurchases] )
+		formatString: 0.0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: adc2c200-78c7-4195-9d1f-a1d52c2ab637
+
+	/// Gasto promedio en productos Gold por cliente. Indicador de afinidad premium.
+	measure 'Gasto Gold Promedio por Cliente' = DIVIDE( [Gasto Gold (Premium)], [Total Clientes] )
+		formatString: $ #,0
+		displayFolder: Mix de Producto y Canal
+		lineageTag: 0b641a68-e49c-43b1-bc58-2714a7cdc327
+
+	/// Días desde la última compra (Recency). Menor valor indica cliente más activo recientemente.
+	measure 'R - Recency Promedio (Días)' = AVERAGE( fact_compras[Recency] )
+		formatString: #,0
+		displayFolder: Segmentación RFM
+		lineageTag: e1772709-0788-4de0-ba21-ec27a9759b55
+
+	/// Frecuencia total de compras por canal (Web + Catálogo + Tienda). Indicador de cuántas veces compra el cliente.
+	measure 'F - Total Compras (Frecuencia)' = SUMX( fact_compras, fact_compras[NumWebPurchases] + fact_compras[NumCatalogPurchases] + fact_compras[NumStorePurchases] )
+		formatString: #,0
+		displayFolder: Segmentación RFM
+		lineageTag: b4b99977-3a42-4aa5-8ff0-2e7b196e2a67
+
+	/// Frecuencia promedio de compras por cliente (Web + Catálogo + Tienda).
+	measure 'F - Compras Promedio por Cliente' = AVERAGEX( fact_compras, fact_compras[NumWebPurchases] + fact_compras[NumCatalogPurchases] + fact_compras[NumStorePurchases] )
+		formatString: 0.0
+		displayFolder: Segmentación RFM
+		lineageTag: 77d3ded2-b5ef-4033-af63-857fb4c7683f
+
+	/// Valor monetario total generado (suma de MntTotal). Indicador de cuánto gasta el cliente.
+	measure 'M - Valor Monetario Total' = [Gasto Total]
+		formatString: $ #,0
+		displayFolder: Segmentación RFM
+		lineageTag: c8f029da-86db-4ac8-86cd-93e2cddfe15d
+
+	/// Gasto monetario promedio por cliente.
+	measure 'M - Valor Monetario Promedio' = [Gasto Promedio por Cliente]
+		formatString: $ #,0
+		displayFolder: Segmentación RFM
+		lineageTag: d87ad952-fb36-4286-a30f-bd2bb4d11da4
+
+	/// Clientes de alto valor: Recency < 30 días, compras totales > 10 y gasto total > percentil 75. Segmento 'Campeones'.
+	measure 'Clientes Campeones' =
+			CALCULATE(
+			    [Total Clientes],
+			    fact_compras[Recency] < 30,
+			    fact_compras[NumWebPurchases] + fact_compras[NumCatalogPurchases] + fact_compras[NumStorePurchases] > 10
+			)
+		formatString: #,0
+		displayFolder: Segmentación RFM
+		lineageTag: 20abb04c-b039-4a62-94bb-0d1ec5264499
+
+	/// Clientes en riesgo: Recency > 60 días pero con gasto histórico alto (MntTotal > promedio).
+	measure 'Clientes en Riesgo' =
+			VAR AvgGasto = CALCULATE( AVERAGE( fact_compras[MntTotal] ), ALL( fact_compras ) )
+			RETURN
+			CALCULATE(
+			    [Total Clientes],
+			    fact_compras[Recency] > 60,
+			    fact_compras[MntTotal] > AvgGasto
+			)
+		formatString: #,0
+		displayFolder: Segmentación RFM
+		lineageTag: c3fff1dc-593a-49fd-90fe-58aa96e4847d
+
+	/// Porcentaje del gasto total generado por el 20% de clientes con mayor MntTotal (regla de Pareto).
+	measure '% Gasto Top 20% Clientes (Pareto)' =
+			VAR nTop = CEILING( COUNTROWS( dim_clientes ) * 0.20, 1 )
+			VAR RankingTable = ADDCOLUMNS(
+			    dim_clientes,
+			    "__Gasto", CALCULATE( SUM( fact_compras[MntTotal] ) )
+			)
+			VAR Top20 = TOPN( nTop, RankingTable, [__Gasto], DESC )
+			VAR GastoTop20 = SUMX( Top20, [__Gasto] )
+			RETURN
+			DIVIDE( GastoTop20, [Gasto Total] )
+		formatString: 0.0%
+		displayFolder: Segmentación RFM
+		lineageTag: 4f6a3468-7f47-43b8-bf7d-40ccbea1d306
+
+	/// Gasto promedio en productos Gold (premium) por nivel educativo en el contexto de filtro activo.
+	measure 'Gasto Gold Promedio (por Educación)' = DIVIDE( SUM( fact_compras[MntGoldProds] ), [Total Clientes] )
+		formatString: $ #,0
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: f5e1be38-913e-4b9a-97a3-a15e7cb08cae
+
+	/// Gasto promedio en cárnicos y frutas combinados. Indica consumo familiar en el contexto de filtro activo.
+	measure 'Gasto Cárnicos + Frutas Promedio' = DIVIDE( SUM( fact_compras[MntMeatProducts] ) + SUM( fact_compras[MntFruits] ), [Total Clientes] )
+		formatString: $ #,0
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 55b23302-36dd-4139-8794-cfb6da95c971
+
+	/// Porcentaje del total de compras del cliente realizadas a través del canal web.
+	measure '% Canal Web' =
+			VAR TotalCompras = SUM( fact_compras[NumWebPurchases] ) + SUM( fact_compras[NumCatalogPurchases] ) + SUM( fact_compras[NumStorePurchases] )
+			RETURN
+			DIVIDE( SUM( fact_compras[NumWebPurchases] ), TotalCompras )
+		formatString: 0.0%
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: a845c033-f30a-4a7d-813a-fa09cf0274f7
+
+	/// Porcentaje del total de compras del cliente realizadas a través del catálogo.
+	measure '% Canal Catálogo' =
+			VAR TotalCompras = SUM( fact_compras[NumWebPurchases] ) + SUM( fact_compras[NumCatalogPurchases] ) + SUM( fact_compras[NumStorePurchases] )
+			RETURN
+			DIVIDE( SUM( fact_compras[NumCatalogPurchases] ), TotalCompras )
+		formatString: 0.0%
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: f234a87f-cf1a-4b40-9f18-657baceede98
+
+	/// Porcentaje del total de compras del cliente realizadas en tienda física.
+	measure '% Canal Tienda' =
+			VAR TotalCompras = SUM( fact_compras[NumWebPurchases] ) + SUM( fact_compras[NumCatalogPurchases] ) + SUM( fact_compras[NumStorePurchases] )
+			RETURN
+			DIVIDE( SUM( fact_compras[NumStorePurchases] ), TotalCompras )
+		formatString: 0.0%
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 86d003fa-343c-4795-a06e-b66353376e89
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 0e608d05-83cd-4240-af79-83ed85a13633
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recency
+		dataType: int64
+		formatString: 0
+		lineageTag: 12303653-8be0-4078-9946-103e01d1674a
+		summarizeBy: sum
+		sourceColumn: Recency
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntTotal
+		dataType: int64
+		formatString: 0
+		lineageTag: 0435001b-eaab-4da7-a74b-cfddf0fc727a
+		summarizeBy: sum
+		sourceColumn: MntTotal
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntRegularProds
+		dataType: int64
+		formatString: 0
+		lineageTag: 0130507e-4127-42ae-85b2-9330cb6eb6a4
+		summarizeBy: sum
+		sourceColumn: MntRegularProds
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntWines
+		dataType: int64
+		formatString: 0
+		lineageTag: b3b907f1-1b6e-4d77-85cc-d40f3dcf88dc
+		summarizeBy: sum
+		sourceColumn: MntWines
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntFruits
+		dataType: int64
+		formatString: 0
+		lineageTag: 27e037f6-b26f-4bdb-86e0-f10c17723258
+		summarizeBy: sum
+		sourceColumn: MntFruits
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntMeatProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: b7e422de-dc9c-4bd6-bf52-6c43d019ac04
+		summarizeBy: sum
+		sourceColumn: MntMeatProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntFishProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: dd397774-14a3-4839-9ace-68a052a5af3d
+		summarizeBy: sum
+		sourceColumn: MntFishProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntSweetProducts
+		dataType: int64
+		formatString: 0
+		lineageTag: 21237549-6c30-48ac-8a24-45c22a658a72
+		summarizeBy: sum
+		sourceColumn: MntSweetProducts
+
+		annotation SummarizationSetBy = Automatic
+
+	column MntGoldProds
+		dataType: int64
+		formatString: 0
+		lineageTag: 8406ec54-371f-45a2-93ed-0821716a4033
+		summarizeBy: sum
+		sourceColumn: MntGoldProds
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumDealsPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 98363dd9-9b10-452c-a97e-40c494eabc1a
+		summarizeBy: sum
+		sourceColumn: NumDealsPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumWebPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 1bf94c0b-0d7f-47b4-bf4c-e3f8daa3639f
+		summarizeBy: sum
+		sourceColumn: NumWebPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumCatalogPurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: eee1129a-79e0-4a2f-8d1e-a8fe53f46569
+		summarizeBy: sum
+		sourceColumn: NumCatalogPurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumStorePurchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c96f8f2-7783-48f0-a84d-def2fa7e2423
+		summarizeBy: sum
+		sourceColumn: NumStorePurchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumWebVisitsMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: b14859f5-9191-4db8-b6c5-f6f5dd984440
+		summarizeBy: sum
+		sourceColumn: NumWebVisitsMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_compras = m
+		mode: import
+		source =
+				let
+				  Origen = Databricks.Catalogs("adb-7405609169068282.2.azuredatabricks.net", "/sql/1.0/warehouses/2d8ac8ce74858ab7", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navegación 1" = Origen{[Name = "marketing", Kind = "Database"]}[Data],
+				  #"Navegación 2" = #"Navegación 1"{[Name = "marketing_schema_prod", Kind = "Schema"]}[Data],
+				  #"Navegación 3" = #"Navegación 2"{[Name = "fact_compras", Kind = "View"]}[Data]
+				in
+				  #"Navegación 3"
+
+	annotation PBI_ResultType = Table
+

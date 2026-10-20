@@ -1,0 +1,12 @@
+relationship AutoDetected_16167875-ea97-446c-bc30-a7f69d14c617
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: fact_campanias.Customer_ID
+	toColumn: dim_clientes.Customer_ID
+
+relationship AutoDetected_d97ba60e-4d46-4bc8-8c29-c048ab1e231d
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: fact_compras.Customer_ID
+	toColumn: dim_clientes.Customer_ID
+

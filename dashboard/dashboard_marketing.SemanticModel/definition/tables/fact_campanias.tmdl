@@ -1,0 +1,180 @@
+table fact_campanias
+	lineageTag: d852a5a1-739a-4004-b266-50dd997bd747
+
+	/// Porcentaje de clientes que respondieron positivamente a la última campaña de marketing.
+	measure 'Tasa Respuesta Última Campaña' = DIVIDE( SUM( fact_campanias[Response] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Visión General del Cliente
+		lineageTag: 002d9258-bad7-42a3-8826-2f891daba6e6
+
+	/// Número de clientes que presentaron al menos una queja en los últimos 2 años.
+	measure 'Clientes con Quejas' = SUM( fact_campanias[Complain] )
+		formatString: #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: c3647d49-35df-425a-a839-40f9b9d42643
+
+	/// Porcentaje de clientes que aceptaron la Campaña 1.
+	measure 'Tasa Aceptación Cmp1' = DIVIDE( SUM( fact_campanias[AcceptedCmp1] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: 065e77c9-a5f4-461b-a3b6-0c424ecd0a1d
+
+	/// Porcentaje de clientes que aceptaron la Campaña 2.
+	measure 'Tasa Aceptación Cmp2' = DIVIDE( SUM( fact_campanias[AcceptedCmp2] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: 3cb9ce7b-4d0c-4166-8181-1788f32de36b
+
+	/// Porcentaje de clientes que aceptaron la Campaña 3.
+	measure 'Tasa Aceptación Cmp3' = DIVIDE( SUM( fact_campanias[AcceptedCmp3] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: 61a2e049-65e5-4301-805c-2318c1447e0c
+
+	/// Porcentaje de clientes que aceptaron la Campaña 4.
+	measure 'Tasa Aceptación Cmp4' = DIVIDE( SUM( fact_campanias[AcceptedCmp4] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: ad2407cc-2d9e-45e4-a1a8-12e1c811d7f0
+
+	/// Porcentaje de clientes que aceptaron la Campaña 5.
+	measure 'Tasa Aceptación Cmp5' = DIVIDE( SUM( fact_campanias[AcceptedCmp5] ), [Total Clientes] )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: ad13a710-08c6-4934-bfee-776ffa2a2b5a
+
+	/// Promedio de campañas aceptadas por cliente (0 a 5). Indica el nivel de engagement acumulado.
+	measure 'Campañas Aceptadas Promedio' = AVERAGE( fact_campanias[AcceptedCmpOverall] )
+		formatString: 0.00
+		displayFolder: Análisis de Campañas
+		lineageTag: 7661b725-b48a-40d4-8185-90e6292fc2f4
+
+	/// Número de clientes que aceptaron más de una campaña.
+	measure 'Clientes Multirespuesta' = COUNTROWS( FILTER( fact_campanias, fact_campanias[AcceptedCmpOverall] > 1 ) )
+		formatString: #,0
+		displayFolder: Análisis de Campañas
+		lineageTag: 4f7a122b-8a3c-4947-a9cd-f3c6469b9035
+
+	/// Ingreso promedio de los clientes que respondieron a la última campaña.
+	measure 'Ingreso Promedio Respondedores' = CALCULATE( AVERAGE( dim_clientes[Income] ), fact_campanias[Response] = 1 )
+		formatString: $ #,0
+		displayFolder: Análisis de Campañas
+		lineageTag: 6a7c0331-08e4-4dc9-86b4-eecab2d00d64
+
+	/// Ingreso promedio de los clientes que NO respondieron a la última campaña.
+	measure 'Ingreso Promedio No Respondedores' = CALCULATE( AVERAGE( dim_clientes[Income] ), fact_campanias[Response] = 0 )
+		formatString: $ #,0
+		displayFolder: Análisis de Campañas
+		lineageTag: 675e9b4f-50fe-49bf-861e-e1d916fbda6f
+
+	/// Edad promedio de los clientes que respondieron a la última campaña.
+	measure 'Edad Promedio Respondedores' = CALCULATE( AVERAGE( dim_clientes[Age] ), fact_campanias[Response] = 1 )
+		formatString: 0.0
+		displayFolder: Análisis de Campañas
+		lineageTag: 89e09bc6-cc03-459c-a69d-6d8c3e263dd3
+
+	/// Porcentaje de clientes con queja que también respondieron a la última campaña.
+	measure 'Tasa Queja entre Respondedores' = CALCULATE( DIVIDE( SUM( fact_campanias[Complain] ), [Total Clientes] ), fact_campanias[Response] = 1 )
+		formatString: 0.0%
+		displayFolder: Análisis de Campañas
+		lineageTag: a3f21f1c-9376-4b9b-a478-bde31d68ec83
+
+	/// Promedio de campañas aceptadas en el contexto de filtro (e.g., por rango de Customer_Days). Mide si los clientes más antiguos son más receptivos.
+	measure 'Campañas Aceptadas Prom (por Antigüedad)' = AVERAGE( fact_campanias[AcceptedCmpOverall] )
+		formatString: 0.00
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: d35db90b-f1f8-4f3f-93e7-3099c53fa11c
+
+	column Customer_ID
+		dataType: string
+		lineageTag: b871c9d3-dec6-479c-b3e3-c7c1eedae9e4
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmp1
+		dataType: int64
+		formatString: 0
+		lineageTag: 39ce576a-4e16-453d-ba6e-6ef157fbc5c2
+		summarizeBy: sum
+		sourceColumn: AcceptedCmp1
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmp2
+		dataType: int64
+		formatString: 0
+		lineageTag: 8224e72a-9434-4ee1-a718-39121f64d587
+		summarizeBy: sum
+		sourceColumn: AcceptedCmp2
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmp3
+		dataType: int64
+		formatString: 0
+		lineageTag: ac416f93-9339-456d-9e1a-62cf660c218a
+		summarizeBy: sum
+		sourceColumn: AcceptedCmp3
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmp4
+		dataType: int64
+		formatString: 0
+		lineageTag: 7183008e-8f0d-4e48-8890-e4361a47c972
+		summarizeBy: sum
+		sourceColumn: AcceptedCmp4
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmp5
+		dataType: int64
+		formatString: 0
+		lineageTag: 393668bf-bef1-4066-8c29-50d23dbf62ac
+		summarizeBy: sum
+		sourceColumn: AcceptedCmp5
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcceptedCmpOverall
+		dataType: int64
+		formatString: 0
+		lineageTag: d706071b-1ec0-4fc1-93d4-da15afc81b28
+		summarizeBy: sum
+		sourceColumn: AcceptedCmpOverall
+
+		annotation SummarizationSetBy = Automatic
+
+	column Response
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d7ba4f8-03dd-4952-9fee-290a06fcdcdc
+		summarizeBy: sum
+		sourceColumn: Response
+
+		annotation SummarizationSetBy = Automatic
+
+	column Complain
+		dataType: int64
+		formatString: 0
+		lineageTag: 40613d5f-830f-480f-95e4-e83bcea53cde
+		summarizeBy: sum
+		sourceColumn: Complain
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_campanias = m
+		mode: import
+		source =
+				let
+				  Origen = Databricks.Catalogs("adb-7405609169068282.2.azuredatabricks.net", "/sql/1.0/warehouses/2d8ac8ce74858ab7", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navegación 1" = Origen{[Name = "marketing", Kind = "Database"]}[Data],
+				  #"Navegación 2" = #"Navegación 1"{[Name = "marketing_schema_prod", Kind = "Schema"]}[Data],
+				  #"Navegación 3" = #"Navegación 2"{[Name = "fact_campanias", Kind = "View"]}[Data]
+				in
+				  #"Navegación 3"
+
+	annotation PBI_ResultType = Table
+
