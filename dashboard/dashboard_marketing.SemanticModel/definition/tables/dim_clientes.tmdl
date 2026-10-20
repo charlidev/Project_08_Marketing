@@ -1,0 +1,197 @@
+table dim_clientes
+	lineageTag: 52393a53-e010-43e6-8cc6-e0eb6259c1b1
+
+	/// Número total de clientes únicos en el modelo.
+	measure 'Total Clientes' = COUNTROWS( dim_clientes )
+		formatString: #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: 6afd7793-5fe2-4326-b851-965e028fac95
+
+	/// Ingreso anual promedio del hogar de los clientes.
+	measure 'Ingreso Promedio' = AVERAGE( dim_clientes[Income] )
+		formatString: $ #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: c138d661-f5f4-4a78-b5e0-97109010fb67
+
+	/// Edad promedio de los clientes.
+	measure 'Edad Promedio' = AVERAGE( dim_clientes[Age] )
+		formatString: 0.0
+		displayFolder: Visión General del Cliente
+		lineageTag: 514be6dc-e3c0-483b-b3fc-9e203d6f0958
+
+	/// Promedio de días de antigüedad de los clientes desde su registro.
+	measure 'Antigüedad Promedio (Días)' = AVERAGE( dim_clientes[Customer_Days] )
+		formatString: #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: fe624542-7c9c-4134-b265-c23d09921a2e
+
+	/// Coeficiente de correlación de Pearson entre Ingreso y Gasto Total por cliente. Valores cercanos a 1 indican relación positiva fuerte.
+	measure 'Correlación Ingreso vs Gasto' =
+			VAR MeanIncome = AVERAGEX( dim_clientes, dim_clientes[Income] )
+			VAR MeanGasto  = AVERAGEX( dim_clientes, CALCULATE( SUM( fact_compras[MntTotal] ) ) )
+			VAR Numerador  = SUMX(
+			    dim_clientes,
+			    ( dim_clientes[Income] - MeanIncome ) *
+			    ( CALCULATE( SUM( fact_compras[MntTotal] ) ) - MeanGasto )
+			)
+			VAR DenomA = SQRT( SUMX( dim_clientes, ( dim_clientes[Income] - MeanIncome ) ^ 2 ) )
+			VAR DenomB = SQRT( SUMX( dim_clientes, ( CALCULATE( SUM( fact_compras[MntTotal] ) ) - MeanGasto ) ^ 2 ) )
+			RETURN
+			DIVIDE( Numerador, DenomA * DenomB )
+		formatString: 0.000
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 0ccfe007-6c24-4eff-9bc4-d80c860a33a0
+
+	/// Promedio de dependientes totales en el hogar del cliente.
+	measure 'Dependientes Promedio' = AVERAGE( dim_clientes[Total_Dependents] )
+		formatString: 0.0
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 64d1307d-f113-4288-9acc-1296e58e8c21
+
+	column Customer_ID
+		dataType: string
+		lineageTag: 6d5cfb88-5c0d-45cc-b8d1-3b9c81c65da8
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: 43d94877-a4cf-43fd-805f-73b022b6d072
+		summarizeBy: sum
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Income
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a4b22b8-d947-4c17-957b-4fa0b041edd2
+		summarizeBy: sum
+		sourceColumn: Income
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Dependents
+		dataType: int64
+		formatString: 0
+		lineageTag: aa51c59e-221e-4d85-9823-3644a39e588f
+		summarizeBy: sum
+		sourceColumn: Total_Dependents
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Divorced
+		dataType: int64
+		formatString: 0
+		lineageTag: 92ae7353-f339-428e-b542-70160dcab95a
+		summarizeBy: sum
+		sourceColumn: marital_Divorced
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Married
+		dataType: int64
+		formatString: 0
+		lineageTag: c16801c6-16cd-4adb-bf99-a41ab3dd03c4
+		summarizeBy: sum
+		sourceColumn: marital_Married
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Single
+		dataType: int64
+		formatString: 0
+		lineageTag: 6de4536c-91fb-4e3b-91db-a7001ff1d812
+		summarizeBy: sum
+		sourceColumn: marital_Single
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Together
+		dataType: int64
+		formatString: 0
+		lineageTag: 6d081fd1-8cf4-4782-bbbc-d0457214e699
+		summarizeBy: sum
+		sourceColumn: marital_Together
+
+		annotation SummarizationSetBy = Automatic
+
+	column marital_Widow
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b442b77-4c6b-4d1b-a84b-a861cb3f02c9
+		summarizeBy: sum
+		sourceColumn: marital_Widow
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_2n_Cycle
+		dataType: int64
+		formatString: 0
+		lineageTag: 733c33a1-6572-4b53-8e71-f8a114f5928c
+		summarizeBy: sum
+		sourceColumn: education_2n_Cycle
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Basic
+		dataType: int64
+		formatString: 0
+		lineageTag: 0980be69-ca3d-49cd-a35a-8b65b9b7ba50
+		summarizeBy: sum
+		sourceColumn: education_Basic
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Graduation
+		dataType: int64
+		formatString: 0
+		lineageTag: 718e07ec-6db2-43d0-affe-aefddd8d3506
+		summarizeBy: sum
+		sourceColumn: education_Graduation
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_Master
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e3301e1-dbe9-42ab-8bd8-a4931cf19f48
+		summarizeBy: sum
+		sourceColumn: education_Master
+
+		annotation SummarizationSetBy = Automatic
+
+	column education_PhD
+		dataType: int64
+		formatString: 0
+		lineageTag: b84b17e0-ad15-4aa7-94ce-6a75c69f9bc6
+		summarizeBy: sum
+		sourceColumn: education_PhD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Customer_Days
+		dataType: int64
+		formatString: 0
+		lineageTag: 3193cd95-d666-4773-99dc-70d74d06b5ee
+		summarizeBy: sum
+		sourceColumn: Customer_Days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_clientes = m
+		mode: import
+		source =
+				let
+				  Origen = Databricks.Catalogs("adb-7405609169068282.2.azuredatabricks.net", "/sql/1.0/warehouses/2d8ac8ce74858ab7", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navegación 1" = Origen{[Name = "marketing", Kind = "Database"]}[Data],
+				  #"Navegación 2" = #"Navegación 1"{[Name = "marketing_schema_prod", Kind = "Schema"]}[Data],
+				  #"Navegación 3" = #"Navegación 2"{[Name = "dim_clientes", Kind = "View"]}[Data]
+				in
+				  #"Navegación 3"
+
+	annotation PBI_ResultType = Table
+
