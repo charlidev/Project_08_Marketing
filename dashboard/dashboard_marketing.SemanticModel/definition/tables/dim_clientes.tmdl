@@ -1,6 +1,53 @@
 table dim_clientes
 	lineageTag: 52393a53-e010-43e6-8cc6-e0eb6259c1b1
 
+	/// Número total de clientes únicos en el modelo.
+	measure 'Total Clientes' = COUNTROWS( dim_clientes )
+		formatString: #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: 6afd7793-5fe2-4326-b851-965e028fac95
+
+	/// Ingreso anual promedio del hogar de los clientes.
+	measure 'Ingreso Promedio' = AVERAGE( dim_clientes[Income] )
+		formatString: $ #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: c138d661-f5f4-4a78-b5e0-97109010fb67
+
+	/// Edad promedio de los clientes.
+	measure 'Edad Promedio' = AVERAGE( dim_clientes[Age] )
+		formatString: 0.0
+		displayFolder: Visión General del Cliente
+		lineageTag: 514be6dc-e3c0-483b-b3fc-9e203d6f0958
+
+	/// Promedio de días de antigüedad de los clientes desde su registro.
+	measure 'Antigüedad Promedio (Días)' = AVERAGE( dim_clientes[Customer_Days] )
+		formatString: #,0
+		displayFolder: Visión General del Cliente
+		lineageTag: fe624542-7c9c-4134-b265-c23d09921a2e
+
+	/// Coeficiente de correlación de Pearson entre Ingreso y Gasto Total por cliente. Valores cercanos a 1 indican relación positiva fuerte.
+	measure 'Correlación Ingreso vs Gasto' =
+			VAR MeanIncome = AVERAGEX( dim_clientes, dim_clientes[Income] )
+			VAR MeanGasto  = AVERAGEX( dim_clientes, CALCULATE( SUM( fact_compras[MntTotal] ) ) )
+			VAR Numerador  = SUMX(
+			    dim_clientes,
+			    ( dim_clientes[Income] - MeanIncome ) *
+			    ( CALCULATE( SUM( fact_compras[MntTotal] ) ) - MeanGasto )
+			)
+			VAR DenomA = SQRT( SUMX( dim_clientes, ( dim_clientes[Income] - MeanIncome ) ^ 2 ) )
+			VAR DenomB = SQRT( SUMX( dim_clientes, ( CALCULATE( SUM( fact_compras[MntTotal] ) ) - MeanGasto ) ^ 2 ) )
+			RETURN
+			DIVIDE( Numerador, DenomA * DenomB )
+		formatString: 0.000
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 0ccfe007-6c24-4eff-9bc4-d80c860a33a0
+
+	/// Promedio de dependientes totales en el hogar del cliente.
+	measure 'Dependientes Promedio' = AVERAGE( dim_clientes[Total_Dependents] )
+		formatString: 0.0
+		displayFolder: Perfil del Cliente Ideal
+		lineageTag: 64d1307d-f113-4288-9acc-1296e58e8c21
+
 	column Customer_ID
 		dataType: string
 		lineageTag: 6d5cfb88-5c0d-45cc-b8d1-3b9c81c65da8

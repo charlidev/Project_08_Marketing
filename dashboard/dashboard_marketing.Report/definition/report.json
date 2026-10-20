@@ -24,6 +24,19 @@
           }
         }
       }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
     ]
   },
   "resourcePackages": [
@@ -35,6 +48,28 @@
           "name": "Fluent2-CY26SU10",
           "path": "BaseThemes/Fluent2-CY26SU10.json",
           "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "STANDALONEhtmlContent443BE3AD55E043BF878BED274D3A6855",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "STANDALONEhtmlContent443BE3AD55E043BF878BED274D3A6855.pbiviz.json",
+          "path": "STANDALONEhtmlContent443BE3AD55E043BF878BED274D3A6855.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "fondo_dashboard_powerbi_1920x17386159194465975.png",
+          "path": "fondo_dashboard_powerbi_1920x17386159194465975.png",
+          "type": "Image"
         }
       ]
     }
